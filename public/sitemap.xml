@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Home -->
+  <url>
+    <loc>https://thesis-hub.dreamitbiz.com/</loc>
+    <lastmod>2026-04-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Courses -->
+  <url>
+    <loc>https://thesis-hub.dreamitbiz.com/courses</loc>
+    <lastmod>2026-04-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Courses - Learning -->
+  <url>
+    <loc>https://thesis-hub.dreamitbiz.com/courses/learning</loc>
+    <lastmod>2026-04-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Courses - Platform -->
+  <url>
+    <loc>https://thesis-hub.dreamitbiz.com/courses/platform</loc>
+    <lastmod>2026-04-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Franchise -->
+  <url>
+    <loc>https://thesis-hub.dreamitbiz.com/franchise</loc>
+    <lastmod>2026-04-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Pricing -->
+  <url>
+    <loc>https://thesis-hub.dreamitbiz.com/pricing</loc>
+    <lastmod>2026-04-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- About -->
+  <url>
+    <loc>https://thesis-hub.dreamitbiz.com/about</loc>
+    <lastmod>2026-04-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- Notice -->
+  <url>
+    <loc>https://thesis-hub.dreamitbiz.com/notice</loc>
+    <lastmod>2026-04-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- QnA -->
+  <url>
+    <loc>https://thesis-hub.dreamitbiz.com/qna</loc>
+    <lastmod>2026-04-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- Shop -->
+  <url>
+    <loc>https://thesis-hub.dreamitbiz.com/shop</loc>
+    <lastmod>2026-04-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Login -->
+  <url>
+    <loc>https://thesis-hub.dreamitbiz.com/login</loc>
+    <lastmod>2026-04-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <!-- Register -->
+  <url>
+    <loc>https://thesis-hub.dreamitbiz.com/register</loc>
+    <lastmod>2026-04-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+</urlset>
