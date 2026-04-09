@@ -63,8 +63,8 @@ const site: SiteConfig = {
     {
       labelKey: 'site.nav.platform', path: '/courses/platform', activePath: '/courses/platform',
       dropdown: [
-        { path: '/courses/ahp-basic', labelKey: 'site.nav.ahpBasic' },
-        { path: '/courses/papers', labelKey: 'site.nav.papers' },
+        { path: '/ahp-guide', labelKey: 'site.nav.ahpBasic' },
+        { path: '/papers-community', labelKey: 'site.nav.papers' },
       ]
     },
     {
