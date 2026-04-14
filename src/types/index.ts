@@ -307,6 +307,7 @@ export interface Coupon {
   label: string;
   lecture_date: string;
   expires_at: string;
+  duration_days: number;
   is_active: boolean;
   created_by: string | null;
   created_at: string;
@@ -329,5 +330,7 @@ export interface MyCoupon {
   label: string;
   lecture_date: string;
   expires_at: string;
+  duration_days: number;
   redeemed_at: string;
+  access_expires_at: string;
 }

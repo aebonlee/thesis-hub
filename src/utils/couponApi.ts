@@ -1,11 +1,11 @@
 import getSupabase from './supabase';
 import type { Coupon, CouponWithStats, MyCoupon } from '../types';
 
-const TABLE_COUPONS = 'exh_coupons';
-const TABLE_USES = 'exh_coupon_uses';
-const CODE_PREFIX = 'EXH';
+const TABLE_COUPONS = 'tsh_coupons';
+const TABLE_USES = 'tsh_coupon_uses';
+const CODE_PREFIX = 'TSH';
 
-/** 쿠폰 코드 자동 생성: EXH-20260408-K3M7 */
+/** 쿠폰 코드 자동 생성: TSH-20260408-K3M7 */
 export function generateCouponCode(lectureDate: string): string {
   const d = lectureDate.replace(/-/g, '');
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -18,15 +18,16 @@ export function generateCouponCode(lectureDate: string): string {
 
 /** 관리자: 쿠폰 발행 */
 export async function createCoupon(
-  input: { label: string; lectureDate: string },
+  input: { label: string; lectureDate: string; durationDays?: number },
   adminUserId: string
 ): Promise<Coupon> {
   const client = getSupabase();
   if (!client) throw new Error('Supabase not configured');
 
+  const days = input.durationDays || 30;
   const code = generateCouponCode(input.lectureDate);
   const expiresAt = new Date(input.lectureDate);
-  expiresAt.setDate(expiresAt.getDate() + 30);
+  expiresAt.setDate(expiresAt.getDate() + days);
 
   const { data, error } = await client
     .from(TABLE_COUPONS)
@@ -34,6 +35,7 @@ export async function createCoupon(
       code,
       label: input.label,
       lecture_date: input.lectureDate,
+      duration_days: days,
       expires_at: expiresAt.toISOString().split('T')[0],
       created_by: adminUserId,
     })
@@ -127,6 +129,11 @@ export async function redeemCoupon(
   if (insertErr) throw insertErr;
 
   // 5) user_licenses에 bundle 라이선스 부여 (LicenseGuard 연동)
+  const durationDays = coupon.duration_days || 30;
+  const licenseExpires = new Date();
+  licenseExpires.setDate(licenseExpires.getDate() + durationDays);
+  const licenseExpiresAt = licenseExpires.toISOString();
+
   try {
     await client.rpc('grant_coupon_license', {
       p_user_id: userId,
@@ -140,7 +147,7 @@ export async function redeemCoupon(
       await client
         .from('user_licenses')
         .upsert(
-          { user_id: userId, license_type: 'bundle', site_slug: null, order_id: null },
+          { user_id: userId, license_type: 'bundle', site_slug: null, order_id: null, expires_at: licenseExpiresAt },
           { onConflict: 'user_id,license_type,site_slug' }
         );
     } catch (fallbackErr) {
@@ -160,18 +167,22 @@ export async function hasActiveCouponAccess(userId: string): Promise<boolean> {
     .from(TABLE_USES)
     .select(`
       id,
+      redeemed_at,
       coupon:${TABLE_COUPONS}!coupon_id (
-        is_active, expires_at
+        is_active, expires_at, duration_days
       )
     `)
     .eq('user_id', userId);
 
   if (error || !data) return false;
 
-  const today = new Date().toISOString().split('T')[0];
-  return data.some((row: Record<string, unknown>) => {
-    const coupon = row.coupon as Record<string, unknown> | null;
-    return coupon?.is_active && (coupon?.expires_at as string) >= today;
+  const now = new Date();
+  return data.some((row: any) => {
+    if (!row.coupon?.is_active) return false;
+    const days = row.coupon?.duration_days || 30;
+    const accessExpires = new Date(row.redeemed_at);
+    accessExpires.setDate(accessExpires.getDate() + days);
+    return accessExpires > now;
   });
 }
 
@@ -186,7 +197,7 @@ export async function getMyActiveCoupons(userId: string): Promise<MyCoupon[]> {
       id,
       redeemed_at,
       coupon:${TABLE_COUPONS}!coupon_id (
-        code, label, lecture_date, expires_at
+        code, label, lecture_date, expires_at, duration_days
       )
     `)
     .eq('user_id', userId)
@@ -197,15 +208,19 @@ export async function getMyActiveCoupons(userId: string): Promise<MyCoupon[]> {
     return [];
   }
 
-  return (data || []).map((row: Record<string, unknown>) => {
-    const coupon = row.coupon as Record<string, string> | null;
+  return (data || []).map((row: any) => {
+    const days = row.coupon?.duration_days || 30;
+    const accessExpires = new Date(row.redeemed_at);
+    accessExpires.setDate(accessExpires.getDate() + days);
     return {
-      id: row.id as string,
-      code: coupon?.code || '',
-      label: coupon?.label || '',
-      lecture_date: coupon?.lecture_date || '',
-      expires_at: coupon?.expires_at || '',
-      redeemed_at: row.redeemed_at as string,
+      id: row.id,
+      code: row.coupon?.code || '',
+      label: row.coupon?.label || '',
+      lecture_date: row.coupon?.lecture_date || '',
+      expires_at: row.coupon?.expires_at || '',
+      duration_days: days,
+      redeemed_at: row.redeemed_at,
+      access_expires_at: accessExpires.toISOString().split('T')[0],
     };
   });
 }
