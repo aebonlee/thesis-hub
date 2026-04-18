@@ -103,6 +103,7 @@ export type PaymentStatus = 'pending' | 'paid' | 'failed' | 'cancelled' | 'refun
 export interface UserProfile {
   id: string;
   email: string;
+  name: string;
   display_name: string;
   avatar_url: string;
   phone: string;
