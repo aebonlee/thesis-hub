@@ -7,6 +7,7 @@ import type { UserProfile, AccountBlock } from '../types';
 import { useIdleTimeout } from '../hooks/useIdleTimeout';
 import ProfileCompleteModal from '../components/ProfileCompleteModal';
 
+import PaymentNudgePopup from '../components/PaymentNudgePopup';
 interface AuthContextValue {
   user: User | null;
   profile: UserProfile | null;
@@ -207,6 +208,9 @@ export const AuthProvider = ({ children }: AuthProviderProps): ReactElement => {
       {needsProfileCompletion && user && (
         <ProfileCompleteModal user={user} onComplete={refreshProfile} />
       )}
+    {isLoggedIn && user && !needsProfileCompletion && (
+      <PaymentNudgePopup user={user} siteSlug="thesis-hub" />
+    )}
     </AuthContext.Provider>
   );
 };
